@@ -1,0 +1,13 @@
+{
+  "servers": [
+    {
+      "name": "docs",
+      "command": "python",
+      "args": ["examples/mcp/docs_server.py"],
+      "timeout_s": 15,
+      "tools": {
+        "search_docs": { "permission": "read", "agents": ["debugging", "repository_intelligence"] }
+      }
+    }
+  ]
+}
