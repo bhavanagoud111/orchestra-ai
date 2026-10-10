@@ -34,6 +34,12 @@ test("bug investigation from request to approved draft pull request", async ({ p
   await page.getByRole("button", { name: "Approve" }).click();
   await expect(page.getByText("Completed", { exact: true }).first()).toBeVisible({ timeout: 30_000 });
 
+  // The graph stays rendered through live status updates (regression: nodes were hidden after approval)
+  const graphNodes = page.locator(".react-flow__node");
+  await expect(graphNodes).toHaveCount(13);
+  for (const node of await graphNodes.all()) await expect(node).toBeVisible();
+  await expect(page.locator('.react-flow__node [data-state="done"]')).toHaveCount(13);
+
   // 9. the timeline and report record the outcome
   await expect(page.getByText(/github\.open_draft_pull succeeded/)).toBeVisible();
   await expect(page.getByText(/^demo:\/\/github\/acme\/invoicekit\/pull\/\d+$/)).toBeVisible();

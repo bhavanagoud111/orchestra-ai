@@ -8,12 +8,14 @@ import {
   MarkerType,
   Position,
   ReactFlow,
+  applyNodeChanges,
+  type NodeChange,
   type Edge,
   type Node,
   type NodeProps,
 } from "@xyflow/react";
 import clsx from "clsx";
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { GraphTopology } from "@/lib/api/types";
 import { humanize } from "@/lib/format";
 
@@ -92,6 +94,49 @@ function StageNode({ data }: NodeProps<Node<StageData>>) {
 
 const nodeTypes = { stage: StageNode };
 
+function buildNodes(topology: GraphTopology, states: Record<string, NodeState>, route?: string[]): Node<StageData>[] {
+  const onRoute = new Set(route ?? []);
+  let fallbackCol = 0;
+  return topology.nodes.map((n) => {
+    const [x, y] = POSITIONS[n.id] ?? [fallbackCol++, 2];
+    const terminal = n.id === "__start__" || n.id === "__end__";
+    const state = states[n.id] ?? (onRoute.has(n.id) ? "on-route" : "idle");
+    return {
+      id: n.id,
+      type: "stage",
+      position: { x: x * COL, y: y * ROW },
+      data: { label: terminal ? (n.id === "__start__" ? "Start" : "End") : humanize(n.id), agent: n.agent, state, terminal },
+      draggable: false,
+      connectable: false,
+    };
+  });
+}
+
+function buildEdges(topology: GraphTopology, states: Record<string, NodeState>, route?: string[]): Edge[] {
+  const onRoute = new Set(route ?? []);
+  const visited = (id: string) => ["done", "active", "waiting", "failed"].includes(states[id] ?? "") || onRoute.has(id);
+  return topology.edges.map((e) => {
+    const isBack = e.source === "verify" && e.target === "debug";
+    const lit = visited(e.source) && visited(e.target);
+    return {
+      id: `${e.source}->${e.target}`,
+      source: e.source,
+      target: e.target,
+      type: "smoothstep",
+      animated: states[e.target] === "active",
+      label: isBack ? "revise" : undefined,
+      labelStyle: { fill: "var(--muted)", fontSize: 10 },
+      labelBgStyle: { fill: "var(--panel)" },
+      markerEnd: { type: MarkerType.ArrowClosed, width: 14, height: 14, color: lit ? "var(--accent)" : "var(--border-strong)" },
+      style: {
+        stroke: lit ? "var(--accent)" : "var(--border-strong)",
+        strokeWidth: lit ? 1.6 : 1,
+        strokeDasharray: e.conditional ? "4 4" : undefined,
+      },
+    };
+  });
+}
+
 export function WorkflowGraph({
   topology,
   states = {},
@@ -105,51 +150,29 @@ export function WorkflowGraph({
   height?: number;
   interactive?: boolean;
 }) {
-  const { nodes, edges } = useMemo(() => {
-    const onRoute = new Set(route ?? []);
-    let fallbackCol = 0;
-    const nodes: Node<StageData>[] = topology.nodes.map((n) => {
-      const [x, y] = POSITIONS[n.id] ?? [fallbackCol++, 2];
-      const terminal = n.id === "__start__" || n.id === "__end__";
-      const state = states[n.id] ?? (onRoute.has(n.id) ? "on-route" : "idle");
-      return {
-        id: n.id,
-        type: "stage",
-        position: { x: x * COL, y: y * ROW },
-        data: { label: terminal ? (n.id === "__start__" ? "Start" : "End") : humanize(n.id), agent: n.agent, state, terminal },
-        draggable: false,
-        connectable: false,
-      };
+  // Nodes live in React Flow-managed state so measured sizes survive updates. Rebuilding node
+  // objects on every status change would drop those measurements and leave nodes hidden.
+  const nodeData = useMemo(() => buildNodes(topology, states, route), [topology, states, route]);
+  const [nodes, setNodes] = useState(nodeData);
+  const [synced, setSynced] = useState(nodeData);
+  if (synced !== nodeData) {
+    // Adjust state during render when inputs change (no effect, no extra paint).
+    setSynced(nodeData);
+    setNodes((prev) => {
+      const byId = new Map(nodeData.map((n) => [n.id, n]));
+      const sameIds = prev.length === nodeData.length && prev.every((n) => byId.has(n.id));
+      return sameIds ? prev.map((n) => ({ ...n, data: byId.get(n.id)!.data })) : nodeData;
     });
-    const visited = (id: string) => ["done", "active", "waiting", "failed"].includes(states[id] ?? "") || onRoute.has(id);
-    const edges: Edge[] = topology.edges.map((e) => {
-      const isBack = e.source === "verify" && e.target === "debug";
-      const lit = visited(e.source) && visited(e.target);
-      return {
-        id: `${e.source}->${e.target}`,
-        source: e.source,
-        target: e.target,
-        type: "smoothstep",
-        animated: states[e.target] === "active",
-        label: isBack ? "revise" : undefined,
-        labelStyle: { fill: "var(--muted)", fontSize: 10 },
-        labelBgStyle: { fill: "var(--panel)" },
-        markerEnd: { type: MarkerType.ArrowClosed, width: 14, height: 14, color: lit ? "var(--accent)" : "var(--border-strong)" },
-        style: {
-          stroke: lit ? "var(--accent)" : "var(--border-strong)",
-          strokeWidth: lit ? 1.6 : 1,
-          strokeDasharray: e.conditional ? "4 4" : undefined,
-        },
-      };
-    });
-    return { nodes, edges };
-  }, [topology, states, route]);
+  }
+  const onNodesChange = useCallback((changes: NodeChange<Node<StageData>>[]) => setNodes((ns) => applyNodeChanges(changes, ns)), []);
+  const edges = useMemo(() => buildEdges(topology, states, route), [topology, states, route]);
 
   return (
     <div style={{ height }} className="w-full" aria-label="Workflow graph" role="figure">
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        onNodesChange={onNodesChange}
         nodeTypes={nodeTypes}
         fitView
         fitViewOptions={{ padding: 0.12 }}
