@@ -7,7 +7,27 @@ bug, a feature, or a pull request to review; a LangGraph workflow routes it thro
 specialised agents that read the repository, plan, diagnose, review and verify; and anything
 that would change GitHub stops at an approval gate until a person decides.
 
-![Execution console](docs/screenshots/execution-console.jpg)
+## Demo
+
+[![Orchestra AI walkthrough: a bug report goes from request to an approved draft pull request](docs/media/orchestra-demo.gif)](docs/media/orchestra-demo.mp4)
+
+*One-minute walkthrough in demo mode (GIF at 1.25× speed; click it for the full-resolution
+[MP4](docs/media/orchestra-demo.mp4)). Recorded from the real application with Playwright. See
+[docs/demo-video.md](docs/demo-video.md) to re-record it.*
+
+What happens in the video (timestamps refer to the MP4):
+
+1. **0:04 — Connect** the bundled demo repository (`acme/invoicekit`).
+2. **0:07 — Request:** "Checkout fails for empty carts, see issue #12."
+3. **0:14 — Agents run.** The workflow graph fills in as each stage completes, and the timeline streams over SSE.
+4. **0:21 — Approval gate.** The run is checkpointed and paused. Nothing has been written to GitHub.
+5. **0:24 — Agent outputs:** ranked files, the task plan, the diagnosis (an unguarded division), and verification,
+   including the repository's tests run in a no-network Docker sandbox.
+6. **0:36 — Review and approve** the exact diff, risk level and requested permissions.
+7. **0:45 — Result:** an `orchestra/*` branch, a commit and a draft PR (simulated in demo mode), then the audit
+   trail, the agents and the workflow graph.
+
+![Execution console after completion](docs/screenshots/execution-console.jpg)
 
 ## What it does
 
