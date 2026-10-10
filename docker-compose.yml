@@ -1,0 +1,54 @@
+# Local stack: Postgres + API + web console.
+#   cp .env.example .env   # then edit tokens/keys
+#   docker compose up --build
+# Open http://localhost:3000
+name: orchestra-ai
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: orchestra
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-orchestra-local}
+      POSTGRES_DB: orchestra
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U orchestra"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/api.Dockerfile
+    env_file: .env
+    environment:
+      ORCHESTRA_DATABASE_URL: postgresql+asyncpg://orchestra:${POSTGRES_PASSWORD:-orchestra-local}@postgres:5432/orchestra
+      ORCHESTRA_CHECKPOINT_URL: postgresql://orchestra:${POSTGRES_PASSWORD:-orchestra-local}@postgres:5432/orchestra
+      ORCHESTRA_CORS_ORIGINS: http://localhost:${ORCHESTRA_WEB_HOST_PORT:-3000}
+      # Test execution needs a Docker daemon; it is off here because mounting the host's
+      # Docker socket would give the API container root-equivalent access to the host.
+      ORCHESTRA_SANDBOX_ENABLED: "false"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${ORCHESTRA_API_HOST_PORT:-8000}:8000"
+
+  web:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/web.Dockerfile
+    environment:
+      ORCHESTRA_API_URL: http://api:8000
+      ORCHESTRA_API_TOKEN: ${ORCHESTRA_WEB_API_TOKEN:?set ORCHESTRA_WEB_API_TOKEN in .env}
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${ORCHESTRA_WEB_HOST_PORT:-3000}:3000"
+
+volumes:
+  postgres-data:
