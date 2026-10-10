@@ -9,7 +9,8 @@
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
-    "gen:api": "openapi-typescript ../../packages/shared-schemas/openapi.json -o src/lib/api/schema.d.ts"
+    "gen:api": "openapi-typescript ../../packages/shared-schemas/openapi.json -o src/lib/api/schema.d.ts",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@xyflow/react": "^12.12.0",
@@ -22,6 +23,7 @@
     "swr": "^2.5.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.0",
     "@tailwindcss/turbopack": "^4",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
