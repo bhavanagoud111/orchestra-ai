@@ -220,6 +220,7 @@ class WorkflowRunner:
             db=s.db,
             node_timeout_s=prefs.limits.node_timeout_s,
             max_debug_revisions=prefs.limits.max_debug_revisions,
+            require_tests_for_pr=prefs.preferences.require_tests_for_pr,
             host_simulated=host.simulated,
         )
         return build_graph(deps, checkpointer=s.checkpointer), ctx

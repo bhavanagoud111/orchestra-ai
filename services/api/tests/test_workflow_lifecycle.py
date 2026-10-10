@@ -324,3 +324,16 @@ async def test_failed_verification_blocks_completion(tmp_path: Path, revisions: 
             revisions > 0)
     finally:
         await services.shutdown()
+
+
+async def test_require_tests_preference_blocks_unverified_pull_requests(client, services: Services) -> None:
+    from orchestra.settings_store import ExecutionPreferences
+
+    await services.store.update(SettingsUpdate(preferences=ExecutionPreferences(
+        sandbox_enabled=False, require_tests_for_pr=True)), "admin")
+    repo_id = await connect_demo(client)
+    wf = await wait_for_status(client, await submit(client, repo_id, "Investigate issue #12"),
+                               {"waiting_for_approval", "failed", "completed"})
+    assert wf["state"]["verification"]["outcome"] == "unverified"
+    assert "tests are required" in wf["state"]["blocked_reason"]
+    assert [a["action_type"] for a in wf["approvals"]] == ["comment_on_issue"]

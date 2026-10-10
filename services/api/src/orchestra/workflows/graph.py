@@ -91,6 +91,7 @@ class GraphDeps:
     node_timeout_s: float
     max_debug_revisions: int
     host_simulated: bool
+    require_tests_for_pr: bool = False
 
 
 class Agents:
@@ -285,6 +286,8 @@ def _node_functions(deps: GraphDeps) -> dict[str, NodeFn]:
         update: dict[str, Any] = {"verification": report.model_dump(mode="json")}
         if report.outcome == "failed" and state.get("revisions", 0) >= deps.max_debug_revisions:
             update["blocked_reason"] = "required verification checks failed"
+        elif report.outcome == "unverified" and debug_ and debug_.proposed_fix and deps.require_tests_for_pr:
+            update["blocked_reason"] = "tests are required before opening a pull request, but none were executed"
         return update
 
     async def propose_actions(state: WorkflowState) -> dict[str, Any]:
@@ -303,6 +306,7 @@ def _node_functions(deps: GraphDeps) -> dict[str, NodeFn]:
             if state.get("verification")
             else None,
             pull_number=(state.get("intent") or {}).get("pull_number"),
+            blocked_reason=state.get("blocked_reason"),
         )
         await ctx.say(
             AgentName.AUTOMATION,

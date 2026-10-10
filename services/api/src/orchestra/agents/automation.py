@@ -84,13 +84,15 @@ class AutomationAgent(Agent):
         review: ReviewReport | None,
         verification: VerificationReport | None,
         pull_number: int | None,
+        blocked_reason: str | None = None,
     ) -> list[ProposedAction]:
         issue = refs.get("issue") or {}
         issue_number = issue.get("number")
         actions: list[ProposedAction] = []
 
         if intent is Intent.BUG_INVESTIGATION and debug is not None:
-            if changed and verification is not None and verification.outcome != "failed" and debug.proposed_fix:
+            fix_blocked = verification is not None and (verification.outcome == "failed" or blocked_reason is not None)
+            if changed and verification is not None and not fix_blocked and debug.proposed_fix:
                 fix = debug.proposed_fix
                 branch = f"orchestra/fix-{issue_number or _slug(fix.summary)}-{ctx.workflow_id[:6]}"
                 checks = "\n".join(
