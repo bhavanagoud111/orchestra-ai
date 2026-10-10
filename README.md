@@ -293,9 +293,3 @@ an isolated container. Details and known gaps are in [SECURITY.md](SECURITY.md).
 - Language-specific sandbox images and dependency caching
 - Polling CI on Orchestra-opened PRs and feeding failures back to Debugging
 - GitHub App authentication
-
-## License and acknowledgments
-
-License: not yet chosen. Until a `LICENSE` file is added, all rights are reserved by the
-author.
-
