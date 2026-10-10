@@ -45,7 +45,7 @@ class Embedder(Protocol):
 
 
 class HashingEmbedder:
-    """Signed feature hashing over unigrams and bigrams, L2-normalised."""
+    """Signed feature hashing over unigrams and bigrams, L2-normalized."""
 
     def __init__(self, dimensions: int = 384) -> None:
         self.dimensions = dimensions

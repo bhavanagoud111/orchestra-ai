@@ -29,7 +29,7 @@ describe("api client", () => {
     expect(err).toMatchObject({ status: 409, code: "conflict", requestId: "req-1", message: "Approval is already approved" });
   });
 
-  it("summarises validation errors", async () => {
+  it("summarizes validation errors", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       jsonResponse({ error: "validation_error", detail: [{ loc: ["body", "request"], msg: "too short" }] }, 422),
     );

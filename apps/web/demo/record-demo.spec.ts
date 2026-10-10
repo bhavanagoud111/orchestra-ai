@@ -58,7 +58,7 @@ test("Orchestra AI walkthrough", async ({ page }) => {
   await expect(page).toHaveURL(/\/workflows\/[0-9a-f]{32}$/);
 
   // Watch the agents
-  await caption(page, "3 · Agents", "The LangGraph workflow routes the request through specialised agents. The graph lights up as each stage finishes.", 3000);
+  await caption(page, "3 · Agents", "The LangGraph workflow routes the request through specialized agents. The graph lights up as each stage finishes.", 3000);
   await expect(page.getByText("Waiting for your approval")).toBeVisible({ timeout: 60_000 });
   await caption(page, "4 · Approval gate", "Nothing is written to GitHub yet. The workflow is checkpointed and paused for a human decision.", 3400);
 

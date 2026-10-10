@@ -26,8 +26,8 @@ class RepositoryAgent(Agent):
         "locates likely implementation points, and retrieves related documentation and prior knowledge."
     )
     instructions = (
-        "Using the repository facts and the ranked snippets, summarise what the repository does and how the "
-        "code relevant to the request is organised. For each relevant file give a concrete reason. Describe "
+        "Using the repository facts and the ranked snippets, summarize what the repository does and how the "
+        "code relevant to the request is organized. For each relevant file give a concrete reason. Describe "
         "code relationships you can see in the snippets (calls, imports, data flow). Only reference paths "
         "that appear in the provided file list."
     )

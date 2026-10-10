@@ -18,7 +18,7 @@ const INTENT_HELP: Record<string, string> = {
   bug_investigation: "Diagnose a failure, propose a minimal fix, review and verify it, then open a draft PR after approval.",
   feature_planning: "Decompose the request into a dependency-ordered plan and file a tracking issue after approval.",
   code_review: "Review a pull request's diff and post the findings as a comment after approval.",
-  repository_analysis: "Summarise structure, dependencies and entry points; store the summary in long-term memory.",
+  repository_analysis: "Summarize structure, dependencies and entry points; store the summary in long-term memory.",
 };
 
 export function WorkflowsView() {

@@ -9,7 +9,7 @@
             propose_actions ─(no actions)→ report
             propose_actions → approval_gate ⟂ interrupt (human) → execute_actions → report → END
 
-Every node is wrapped to: honour cancellation, record stage events with
+Every node is wrapped to: honor cancellation, record stage events with
 durations, update the workflow row, and enforce a per-node timeout. Transient
 failures (rate limits, network) are retried by LangGraph's RetryPolicy with
 exponential backoff; the debug↔verify loop is bounded by ``max_debug_revisions``
@@ -477,7 +477,7 @@ def after_propose(state: WorkflowState) -> str:
 
 
 def build_graph(deps: GraphDeps | None = None, checkpointer: Any = None) -> Any:
-    """Build the compiled workflow graph. ``deps=None`` builds topology only (for visualisation)."""
+    """Build the compiled workflow graph. ``deps=None`` builds topology only (for visualization)."""
     fns = _node_functions(deps) if deps is not None else {name: _noop for name in NODE_AGENTS}
     retry = RetryPolicy(
         max_attempts=3, initial_interval=1.0, backoff_factor=2.0, max_interval=20.0, retry_on=is_transient

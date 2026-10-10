@@ -177,7 +177,7 @@ async def analyze_repository(
         repo = await get_or_404(s, Repository, repository_id, "Repository")
         wf = Workflow(
             title=f"Analyze {repo.full_name}",
-            request=f"Analyze the architecture of {repo.full_name}: summarise modules, entry points, "
+            request=f"Analyze the architecture of {repo.full_name}: summarize modules, entry points, "
             "dependencies and documentation.",
             mode=services.settings.mode.value,
             repository_id=repo.id,

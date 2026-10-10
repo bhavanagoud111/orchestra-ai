@@ -73,7 +73,7 @@ class RelevantFile(BaseModel):
 
 
 class RepositoryContext(BaseModel):
-    summary: str = Field(description="What the repository does and how the relevant code is organised")
+    summary: str = Field(description="What the repository does and how the relevant code is organized")
     languages: list[str]
     dependencies: list[str]
     entry_points: list[str]

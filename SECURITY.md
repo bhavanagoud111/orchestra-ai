@@ -2,9 +2,9 @@
 
 ## Reporting a vulnerability
 
-Please report suspected vulnerabilities privately through GitHub's
-"Report a vulnerability" (Security → Advisories) on this repository rather than in a public
-issue. Include steps to reproduce and the affected version or commit.
+Please report suspected vulnerabilities privately to the maintainer, using the contact details
+on the repository owner's GitHub profile, rather than in a public issue. Include steps to
+reproduce and the affected commit.
 
 ## Threat model
 
@@ -12,17 +12,17 @@ Orchestra AI reads repositories, issues and pull requests that may be written by
 some of that content to a language model, and can write to GitHub. The main risks are:
 
 1. untrusted content steering the model into harmful actions (prompt injection);
-2. unauthorised or unintended writes to GitHub;
+2. unauthorized or unintended writes to GitHub;
 3. leaking credentials through logs, events, memory, PR bodies or the browser;
 4. running untrusted repository code.
 
 ## Controls
 
-### Authorisation is enforced in code, not by the model
+### Authorization is enforced in code, not by the model
 - Agents produce structured outputs; they cannot call tools. Agent code calls tools through
   `ToolExecutor`, which enforces a static per-agent allowlist (`tools/policy.py`).
 - Write tools additionally require an `Approval` that a human approved, that belongs to the same
-  workflow, and whose action type authorises that tool. Each write needs an idempotency key.
+  workflow, and whose action type authorizes that tool. Each write needs an idempotency key.
 - API endpoints check roles server-side (`viewer` < `operator` < `approver` < `admin`).
   Approving requires `approver`; settings require `admin`.
 - Approval decisions are compare-and-set: an approval can leave `pending` exactly once.

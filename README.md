@@ -1,10 +1,17 @@
 # Orchestra AI
 
+[![CI](https://github.com/bhavanagoud111/orchestra-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/bhavanagoud111/orchestra-ai/actions/workflows/ci.yml)
+![Python 3.12](https://img.shields.io/badge/python-3.12-3776AB?logo=python&logoColor=white)
+![LangGraph](https://img.shields.io/badge/LangGraph-1.2-1C3C3C)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.143-009688?logo=fastapi&logoColor=white)
+![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+
 *From engineering intent to coordinated execution.*
 
 Orchestra AI is a multi-agent control plane for software engineering work. You describe a
 bug, a feature, or a pull request to review; a LangGraph workflow routes it through
-specialised agents that read the repository, plan, diagnose, review and verify; and anything
+specialized agents that read the repository, plan, diagnose, review and verify; and anything
 that would change GitHub stops at an approval gate until a person decides.
 
 ## Demo
@@ -48,7 +55,7 @@ What happens in the video (timestamps refer to the MP4):
   approval survives restarts, and interrupted runs resume from their last checkpoint.
 - **Observability**: a live (SSE) execution timeline, tool-call traces, routing decisions,
   structured outputs per agent, request IDs and structured logs.
-- **Demo mode** that needs no API keys and is labelled as simulated everywhere, and **live
+- **Demo mode** that needs no API keys and is labeled as simulated everywhere, and **live
   mode** using Anthropic models and the GitHub API.
 
 ## Architecture
@@ -98,7 +105,7 @@ Using the bundled demo repository `acme/invoicekit`, the request is
    writes to GitHub, review raised a finding).
 8. After approval, it creates `orchestra/fix-12-…`, commits the file and opens a draft PR that
    references the issue.
-9. **Reporting** summarises decisions and outcomes and writes the investigation to long-term
+9. **Reporting** summarizes decisions and outcomes and writes the investigation to long-term
    memory.
 
 Issue `#15` in the demo repo contains a prompt-injection attempt ("ignore all previous
@@ -258,7 +265,7 @@ The Docker sandbox tests are skipped automatically when the sandbox image is not
 
 ## Security
 
-Agents cannot call tools or authorise anything. Every write needs a recorded human approval
+Agents cannot call tools or authorize anything. Every write needs a recorded human approval
 bound to the workflow and action type. Write scope excludes merges, force-pushes, the default
 branch and CI configuration. Untrusted content is fenced and screened. Secrets stay
 server-side, encrypted at rest, and are redacted from logs, events and memory. Tests run only in

@@ -1,6 +1,6 @@
 """Typed LangGraph workflow state.
 
-State holds only JSON-serialisable data (agent outputs are stored as
+State holds only JSON-serializable data (agent outputs are stored as
 ``model_dump(mode="json")`` dicts) so every step can be checkpointed and a
 workflow paused for approval can be resumed after a restart.
 """

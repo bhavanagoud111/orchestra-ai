@@ -33,7 +33,7 @@ over stdio. Point `ORCHESTRA_MCP_CONFIG_PATH` at a JSON file (see
 | Declared in `tools`? | Registered permission | Usable by |
 | --- | --- | --- |
 | yes, `"permission": "read"` | read | the listed `agents` |
-| yes, `"permission": "write"` | write | nobody (no approval type authorises MCP writes yet) |
+| yes, `"permission": "write"` | write | nobody (no approval type authorizes MCP writes yet) |
 | no | write | nobody |
 
 Undeclared tools are visible in Settings → Tool permissions but cannot run. Any tool can also be

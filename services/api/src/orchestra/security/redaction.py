@@ -1,6 +1,6 @@
 """Secret redaction for logs, events, tool arguments, and memory.
 
-Redaction is best-effort pattern matching. It is a second line of defence: the
+Redaction is best-effort pattern matching. It is a second line of defense: the
 primary control is that secrets are never placed into model context or events.
 """
 

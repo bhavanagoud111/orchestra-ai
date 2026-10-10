@@ -76,7 +76,7 @@ def template_plan(
                 AgentName.DEBUGGING,
                 ["T2"],
                 2,
-                [f"{subject} no longer reproduces", "Existing behaviour for valid inputs is unchanged"],
+                [f"{subject} no longer reproduces", "Existing behavior for valid inputs is unchanged"],
                 ["repo.read_file"],
                 ["repo:read"],
             ),
@@ -131,8 +131,8 @@ def template_plan(
             ),
             _t(
                 "T2",
-                "Define behaviour and edge cases",
-                f"Specify the expected behaviour for: {subject}.",
+                "Define behavior and edge cases",
+                f"Specify the expected behavior for: {subject}.",
                 AgentName.PLANNING,
                 ["T1"],
                 2,
@@ -154,7 +154,7 @@ def template_plan(
             _t(
                 "T4",
                 "Add tests",
-                "Cover the new behaviour and edge cases with unit tests.",
+                "Cover the new behavior and edge cases with unit tests.",
                 AgentName.VERIFICATION,
                 ["T3"],
                 2,
@@ -186,7 +186,7 @@ def template_plan(
             ),
         ]
         risks = ["Scope may grow once edge cases are enumerated"]
-        questions = ["Who owns sign-off on the behavioural specification?"]
+        questions = ["Who owns sign-off on the behavioral specification?"]
     elif intent.intent is Intent.CODE_REVIEW:
         tasks = [
             _t(
@@ -223,14 +223,14 @@ def template_plan(
                 ["github:write (approved)"],
             ),
         ]
-        risks = ["Static review cannot confirm runtime behaviour"]
+        risks = ["Static review cannot confirm runtime behavior"]
         questions = [] if intent.pull_number else ["Which pull request should be reviewed?"]
     else:
         tasks = [
             _t(
                 "T1",
                 "Survey structure",
-                "Summarise layout, languages, dependencies and entry points.",
+                "Summarize layout, languages, dependencies and entry points.",
                 AgentName.REPOSITORY,
                 [],
                 1,

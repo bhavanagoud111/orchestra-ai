@@ -110,7 +110,7 @@ def static_review(diffs: dict[str, str]) -> list[ReviewFinding]:
                 category="tests",
                 path=None,
                 message="Source files changed without accompanying test changes",
-                suggestion="Add a regression test covering the changed behaviour",
+                suggestion="Add a regression test covering the changed behavior",
             )
         )
     # de-duplicate identical findings per file
@@ -139,7 +139,7 @@ class CodeReviewAgent(Agent):
     instructions = (
         "Review the diff. Report concrete findings only, each tied to a file, with severity "
         "(info/low/medium/high/critical) and a suggested fix. Use high or critical only for defects that would "
-        "cause incorrect behaviour, security exposure, or data loss. Assess whether tests cover the change. "
+        "cause incorrect behavior, security exposure, or data loss. Assess whether tests cover the change. "
         "Static-analysis findings are provided; confirm, refine, or dismiss them with reasons."
     )
 

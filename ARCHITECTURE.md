@@ -61,7 +61,7 @@ propose_actions → approval_gate ⟂ interrupt() → execute_actions → report
 
 ### State
 
-`WorkflowState` (`workflows/state.py`) is a `TypedDict` holding only JSON-serialisable data;
+`WorkflowState` (`workflows/state.py`) is a `TypedDict` holding only JSON-serializable data;
 agent outputs are stored as `model_dump(mode="json")`. That is what lets every step be
 checkpointed and lets a paused workflow resume in a different process.
 
@@ -91,7 +91,7 @@ last pending approval is decided, the runner resumes the thread with
 `Command(resume=decisions)`. Approval decisions use a compare-and-set update, so two approvers
 cannot both decide the same approval.
 
-### Restart behaviour
+### Restart behavior
 
 On startup, `WorkflowRunner.recover()` resubmits workflows left `running` (continuing from their
 last checkpoint) and `pending`. A re-executed node may repeat read-only work; external writes
@@ -110,7 +110,7 @@ structured output via `Agent.reason()`:
 - **Demo mode**: a deterministic heuristic produces the same schema. These heuristics do real
   work on real data (BM25 retrieval, stack-trace parsing, a division-by-zero guard detector,
   static review rules, real patch application) but they are not AI. Every such output is
-  emitted with `simulated: true` and labelled "Demo reasoning" in the UI.
+  emitted with `simulated: true` and labeled "Demo reasoning" in the UI.
 
 Models never call tools or decide authorization. Deterministic code overrides model claims
 where facts are known: repository languages/dependencies come from the tree, hallucinated file
@@ -126,7 +126,7 @@ source). `tools/executor.py` enforces, in order:
 2. the agent is allowed to use it (`tools/policy.py` static allowlist, plus MCP grants) and the
    tool is not disabled in Settings;
 3. for `write` tools: an `Approval` in `approved` state, belonging to the same workflow, whose
-   action type authorises this tool, plus an idempotency key;
+   action type authorizes this tool, plus an idempotency key;
 4. input validation, timeout, output validation;
 5. a `ToolCall` row and `tool_call`/`tool_result` events with redacted arguments.
 
@@ -137,7 +137,7 @@ Responses from non-built-in tools are scanned for prompt-injection patterns.
 `integrations/mcp/manager.py` launches each configured stdio server in its own owner task
 (keeping the transport's cancel scope in one task), discovers tools, and registers them as
 `mcp.<server>.<tool>`. Tools not declared in config default to `write` with no agent grants,
-and no built-in approval type authorises an MCP write. Servers receive only `PATH` plus
+and no built-in approval type authorizes an MCP write. Servers receive only `PATH` plus
 their configured environment. See [docs/mcp.md](docs/mcp.md).
 
 ## Retrieval and memory

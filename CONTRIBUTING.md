@@ -46,7 +46,7 @@ make e2e            # Playwright against a real API in demo mode
   `ProposedAction` (see `agents/automation.py`). Add the action type to the tool's
   `approval_actions`.
 - Agent outputs need a schema in `schemas/agents.py` and a deterministic demo implementation.
-  Demo output must stay honest: it is labelled simulated in the UI.
+  Demo output must stay honest: it is labeled simulated in the UI.
 
 ## Commits
 
