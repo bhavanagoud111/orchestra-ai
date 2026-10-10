@@ -1,0 +1,11 @@
+# Test suites contain deliberately fake credentials to exercise redaction.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Synthetic credentials in tests"
+paths = [
+  '''services/api/tests/.*''',
+  '''apps/web/src/.*\.test\.tsx?''',
+  '''apps/web/playwright\.config\.ts''',
+]
