@@ -33,3 +33,4 @@ mcp.json
 .DS_Store
 .idea/
 .vscode/
+apps/web/demo-output/
