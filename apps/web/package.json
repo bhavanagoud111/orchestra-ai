@@ -10,8 +10,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "gen:api": "openapi-typescript ../../packages/shared-schemas/openapi.json -o src/lib/api/schema.d.ts",
-    "test:e2e": "playwright test",
-    "demo:record": "playwright test -c playwright.demo.config.ts"
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@xyflow/react": "^12.12.0",

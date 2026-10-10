@@ -18,9 +18,8 @@ that would change GitHub stops at an approval gate until a person decides.
 
 [![Orchestra AI walkthrough: a bug report goes from request to an approved draft pull request](docs/media/orchestra-demo.gif)](docs/media/orchestra-demo.mp4)
 
-*One-minute walkthrough in demo mode (GIF at 1.25× speed; click it for the full-resolution
-[MP4](docs/media/orchestra-demo.mp4)). Recorded from the real application with Playwright. See
-[docs/demo-video.md](docs/demo-video.md) to re-record it.*
+*One-minute walkthrough of the running application in demo mode (GIF at 1.25× speed; click it
+for the full-resolution [MP4](docs/media/orchestra-demo.mp4)).*
 
 What happens in the video (timestamps refer to the MP4):
 
