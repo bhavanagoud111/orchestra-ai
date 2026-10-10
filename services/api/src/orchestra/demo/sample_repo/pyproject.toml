@@ -1,0 +1,8 @@
+[project]
+name = "invoicekit"
+version = "0.4.1"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
