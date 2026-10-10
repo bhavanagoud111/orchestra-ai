@@ -279,7 +279,3 @@ an isolated container. Details and known gaps are in [SECURITY.md](SECURITY.md).
 License: not yet chosen. Until a `LICENSE` file is added, all rights are reserved by the
 author.
 
-Orchestra AI is an independent, clean-room implementation that was conceptually inspired by the
-[agentverse](https://github.com/salmanmkc/agentverse) hackathon project. It contains no code
-or assets from that project. See [NOTICE.md](NOTICE.md). Third-party dependencies and their
-licenses are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
