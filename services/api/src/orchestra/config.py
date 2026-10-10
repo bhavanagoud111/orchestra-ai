@@ -10,9 +10,10 @@ from __future__ import annotations
 from enum import StrEnum
 from functools import lru_cache
 from pathlib import Path
+from typing import Annotated
 
 from pydantic import Field, SecretStr, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class RunMode(StrEnum):
@@ -47,7 +48,7 @@ class Settings(BaseSettings):
     # Key used to encrypt secrets saved through the Settings API (Fernet, urlsafe base64).
     secret_key: SecretStr | None = None
 
-    cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:3000"])
+    cors_origins: Annotated[list[str], NoDecode] = Field(default_factory=lambda: ["http://localhost:3000"])
     rate_limit_per_minute: int = 240
 
     # LLM provider
@@ -98,7 +99,11 @@ class Settings(BaseSettings):
     @field_validator("cors_origins", mode="before")
     @classmethod
     def _split_origins(cls, value: object) -> object:
-        if isinstance(value, str) and not value.startswith("["):
+        if isinstance(value, str):
+            if value.strip().startswith("["):
+                import json
+
+                return json.loads(value)
             return [v.strip() for v in value.split(",") if v.strip()]
         return value
 

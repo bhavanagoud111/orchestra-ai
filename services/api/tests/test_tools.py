@@ -171,7 +171,7 @@ async def test_secrets_are_redacted_from_recorded_arguments(services: Services) 
 
 
 @pytest.fixture
-async def mcp(services: Services):  # noqa: ANN201
+async def mcp(services: Services):
     config = McpConfig(servers=[
         McpServerConfig(name="docs", command=sys.executable, args=[str(EXAMPLE_MCP)],
                         tools={"search_docs": McpToolGrant(permission=Permission.READ,

@@ -172,3 +172,15 @@ def test_app_refuses_to_start_without_tokens(tmp_path: Path) -> None:
 
 def test_tokens_are_distinct() -> None:
     assert len(set(TOKENS.values())) == 4
+
+
+@pytest.mark.parametrize(("raw", "expected"), [
+    ("http://localhost:3000", ["http://localhost:3000"]),
+    ("http://a.test, http://b.test", ["http://a.test", "http://b.test"]),
+    ('["http://c.test"]', ["http://c.test"]),
+])
+def test_cors_origins_from_environment(monkeypatch, raw: str, expected: list[str]) -> None:
+    from orchestra.config import Settings
+
+    monkeypatch.setenv("ORCHESTRA_CORS_ORIGINS", raw)
+    assert Settings(_env_file=None).cors_origins == expected  # type: ignore[call-arg]

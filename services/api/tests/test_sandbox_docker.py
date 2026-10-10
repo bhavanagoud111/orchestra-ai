@@ -11,7 +11,7 @@ import pytest
 from orchestra.demo.host import DemoCodeHost
 from orchestra.integrations.sandbox import DockerSandbox
 from orchestra.services import Services
-from tests.conftest import auth, connect_demo, make_settings, submit, wait_for_status
+from tests.conftest import connect_demo, make_settings, submit, wait_for_status
 
 IMAGE = "orchestra-sandbox-python:3.12"
 COMMAND = "python -m pytest -q -p no:cacheprovider"
@@ -69,7 +69,7 @@ async def test_verification_runs_tests_in_sandbox(tmp_path: Path) -> None:
         async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://t") as client:
             repo_id = await connect_demo(client)
             wf = await wait_for_status(client, await submit(client, repo_id, "Investigate issue #12"),
-                                       {"waiting_for_approval", "failed"}, timeout=180)
+                                       {"waiting_for_approval", "failed"}, wait_s=180)
         checks = {c["name"]: c for c in wf["state"]["verification"]["checks"]}
         assert checks["tests"]["status"] == "passed", checks["tests"]["details"]
         assert wf["state"]["verification"]["outcome"] == "passed"

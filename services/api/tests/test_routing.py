@@ -8,7 +8,7 @@ from pydantic import ValidationError
 from orchestra.agents.orchestrator import ROUTES, find_references, heuristic_intent
 from orchestra.integrations.github.protocol import IssueInfo
 from orchestra.schemas.agents import AgentName, ExecutionPlan, Intent, PlannedTask
-from orchestra.workflows.graph import build_graph, graph_topology
+from orchestra.workflows.graph import graph_topology
 
 
 @pytest.mark.parametrize(
@@ -40,13 +40,8 @@ def test_find_references(text: str, issue: int | None, pull: int | None) -> None
     assert find_references(text) == (issue, pull)
 
 
-def _state(intent: Intent, **kw):  # noqa: ANN202
+def _state(intent: Intent, **kw):
     return {"intent": {"intent": intent.value}, **kw}
-
-
-def _routers():  # noqa: ANN202
-    graph = build_graph()
-    return {k: v for k, v in graph.builder.branches.items()}
 
 
 def test_routes_cover_every_intent() -> None:

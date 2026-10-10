@@ -68,7 +68,7 @@ async def test_cancel_running_workflow(tmp_path: Path) -> None:
         return {"intent": "repository_analysis", "confidence": 0.9, "rationale": "r", "search_terms": ["cart"]}
 
     class Blocking(ScriptedReasoner):
-        async def structured(self, **kw: Any):  # noqa: ANN202
+        async def structured(self, **kw: Any):
             gate.set()
             await asyncio.sleep(30)
             return await super().structured(**kw)
@@ -229,7 +229,7 @@ async def _run_live(tmp_path: Path, reasoner: ScriptedReasoner) -> tuple[Service
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://t") as client:
         repo_id = await connect_demo(client)
         wf_id = await submit(client, repo_id, "Investigate issue #12")
-        wf = await wait_for_status(client, wf_id, {"waiting_for_approval", "failed"}, timeout=60)
+        wf = await wait_for_status(client, wf_id, {"waiting_for_approval", "failed"}, wait_s=60)
         events = (await client.get(f"/api/workflows/{wf_id}/events", headers=auth("viewer"))).json()
     return services, wf, events
 
@@ -313,7 +313,7 @@ async def test_failed_verification_blocks_completion(tmp_path: Path, revisions: 
         async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://t") as client:
             repo_id = await connect_demo(client)
             wf = await wait_for_status(client, await submit(client, repo_id, "Investigate issue #12"),
-                                       {"failed", "waiting_for_approval", "completed"}, timeout=60)
+                                       {"failed", "waiting_for_approval", "completed"}, wait_s=60)
         assert sum(1 for n, _ in reasoner.calls if n == "DebugReport") == revisions + 1
         assert wf["status"] in {"failed", "waiting_for_approval"}
         # A blocked fix never becomes a pull-request proposal; at most an issue comment is proposed.

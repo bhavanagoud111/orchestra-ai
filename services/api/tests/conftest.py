@@ -67,8 +67,8 @@ async def client(services: Services) -> AsyncIterator[httpx.AsyncClient]:
 
 
 async def wait_for_status(client: httpx.AsyncClient, workflow_id: str, statuses: set[str],
-                          timeout: float = 30.0) -> dict[str, Any]:
-    deadline = asyncio.get_running_loop().time() + timeout
+                          wait_s: float = 30.0) -> dict[str, Any]:
+    deadline = asyncio.get_running_loop().time() + wait_s
     while True:
         resp = await client.get(f"/api/workflows/{workflow_id}", headers=auth("viewer"))
         body = resp.json()
